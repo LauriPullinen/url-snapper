@@ -1,0 +1,41 @@
+html {
+	font-family: 'Vollkorn' serif;
+}
+
+.container {
+	width: 100%;
+	max-width: 500px;
+	margin: 0 auto;
+}
+
+h1, h2 {
+	text-align: center;
+}
+
+h1 {
+	font-weight: normal;
+}
+
+h2 {
+	font-weight: bold;
+	font-style: italic;
+}
+
+input {
+	margin-top: 0;
+	margin-bottom: 0;
+}
+
+input[type=url] {
+	width: 80%;
+}
+
+input[type=submit] {
+	width: 15%
+}
+
+#short-url-container {
+	display: none;
+	margin-top: 1em;
+	text-align: center;
+}

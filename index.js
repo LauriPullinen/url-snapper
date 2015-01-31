@@ -2,8 +2,9 @@ var http = require("http");
 var express = require("express");
 var bodyParser = require("body-parser");
 var path = require("path");
+var mongoose = require("mongoose");
+var shortid = require("shortid");
 
-var port = process.env.PORT || 1337;
 var app = express();
 
 app.use(bodyParser.urlencoded({
@@ -19,18 +20,60 @@ app.get("/", function(request, response) {
 });
 
 app.get("/:id", function(request, response) {
-	response.status(200);
-	response.set("Content-Type", "text/plain");
-	response.send("GET parameter: " + request.params.id);
+	var url = URL.findOne({ title: request.params.link }, handleDBError);
+	if(url && url.url) {
+		response.redirect(301, url.url);
+	} else {
+		response.status(404).end();
+	}
 });
 
 app.post("/", function(request, response) {
+	// Validate the request, it should have an URL to shorten
+	if(!request.body.url) {
+		response.status(400);
+		response.set("Content-Type", "text/plain");
+		return response.send("No URL found in your request");
+	}
+
 	response.status(200);
 	response.set("Content-Type", "text/plain");
-	response.send("POST parameters: " + JSON.stringify(request.params));
+	// Storing a new shortened URL into the database
+	var newURL = new URL({
+		id: shortid.generate(),
+		url: request.body.url,
+	});
+	newURL.save(handleDBError);
+	response.send(path.join(request.headers.host, newURL.id));
 });
 
+var port = process.env.PORT || 1337;
 var server = app.listen(port, function () {
   var host = server.address().address;
   console.log("Server listening at http://%s:%s", host, port);
 });
+
+
+var db = mongoose.connection;
+var dbURI = process.env.MONGOLAB_URI || process.env.MONGOHQ_URL || 
+	'mongodb://localhost/url-database';
+mongoose.connect(dbURI);
+
+// Defining the URL model
+var URL;
+db.once("open", function() {
+	var urlSchema = new mongoose.Schema({
+		id: String,
+		url: String,
+		createdAt: {type: Date, default: Date.now}
+	});
+	URL = mongoose.model("URL", urlSchema);
+});
+
+// Function for logging the errors in database operations
+function handleDBError(error, item) {
+	if(error) {
+		console.error("Error saving item " + JSON.stringify(item));
+		return console.error(error);
+	}
+}
