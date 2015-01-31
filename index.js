@@ -16,7 +16,7 @@ app.get("/:id", function(request, response) {
 	response.send("GET parameter: " + request.params.id);
 });
 
-app.post("/", function(request, response)) {
+app.post("/", function(request, response) {
 	response.status(200);
 	response.set("Content-Type", "text/plain");
 	response.send("POST parameters: " + JSON.stringify(request.params));
