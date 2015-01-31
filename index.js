@@ -20,7 +20,7 @@ app.post("/", function(request, response) {
 	response.status(200);
 	response.set("Content-Type", "text/plain");
 	response.send("POST parameters: " + JSON.stringify(request.params));
-}
+});
 
 var server = app.listen(port, function () {
   var host = server.address().address;
