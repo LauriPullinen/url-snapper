@@ -1,0 +1,13 @@
+{
+  "name": "url-snapper",
+  "version": "0.1",
+  "description": "A simple URL shortening service",
+  "main": "index.js",
+  "scripts": {
+    "start": "node index.js"
+  },
+  "engines": {
+    "node": "0.10.x"
+  },
+  "license": "MIT"
+}
