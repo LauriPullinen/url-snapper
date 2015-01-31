@@ -1,9 +1,28 @@
-var http = require('http');
-var port = process.env.PORT || 1337;
+var http = require("http");
+var express = require("express");
+var bodyParser = require("body-parser");
 
-http.createServer(function (req, res) {
-  res.writeHead(200, {'Content-Type': 'text/plain'});
-  res.end('Hello World\n');
-}).listen(port, function() {
-	console.log('Server running at port ' + port);
+
+var port = process.env.PORT || 1337;
+var app = express();
+
+app.use(bodyParser.urlencoded({
+	extended: true 
+}));
+
+app.get("/:id", function(request, response) {
+	response.status(200);
+	response.set("Content-Type", "text/plain");
+	response.send("GET parameter: " + request.params.id);
+});
+
+app.post("/", function(request, response)) {
+	response.status(200);
+	response.set("Content-Type", "text/plain");
+	response.send("POST parameters: " + JSON.stringify(request.params));
+}
+
+var server = app.listen(port, function () {
+  var host = server.address().address;
+  console.log("Server listening at http://%s:%s", host, port);
 });
