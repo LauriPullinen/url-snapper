@@ -10,6 +10,14 @@ app.use(bodyParser.urlencoded({
 	extended: true 
 }));
 
+app.use(express.static(path.join(__dirname, 'public')));
+
+app.get("/", function(request, response) {
+	response.status(200);
+	response.set("Content-Type", "text/plain");
+	response.send("Front page");
+});
+
 app.get("/:id", function(request, response) {
 	response.status(200);
 	response.set("Content-Type", "text/plain");
