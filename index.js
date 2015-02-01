@@ -44,7 +44,7 @@ app.post("/", function(request, response) {
 		url: request.body.url,
 	});
 	newURL.save(handleDBError);
-	response.send(path.join(request.headers.host, newURL.id));
+	response.send(request.protocol + "://" + request.headers.host + newURL.id);
 });
 
 var port = process.env.PORT || 1337;
