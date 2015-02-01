@@ -55,9 +55,14 @@ var server = app.listen(port, function () {
 
 
 var db = mongoose.connection;
-var dbURI = process.env.MONGOLAB_URI || process.env.MONGOHQ_URL || 
-	'mongodb://localhost/url-database';
-mongoose.connect(dbURI);
+var dbURI = process.env.MONGOLAB_URI || "mongodb://localhost/url-database";
+mongoose.connect(dbURI, function(error, result) {
+	if(error) {
+		console.error("Error connecting to " + dbURI);
+	} else {
+		console.log("Connected to " + dbURI);
+	}
+});
 
 // Defining the URL model
 var URL;
@@ -73,7 +78,7 @@ db.once("open", function() {
 // Function for logging the errors in database operations
 function handleDBError(error, item) {
 	if(error) {
-		console.error("Error saving item " + JSON.stringify(item));
+		console.error("Database error with item " + JSON.stringify(item));
 		return console.error(error);
 	}
 }
