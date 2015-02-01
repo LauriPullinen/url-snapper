@@ -13,40 +13,6 @@ app.use(bodyParser.urlencoded({
 
 app.use(express.static(path.join(__dirname, 'public')));
 
-app.get("/", function(request, response) {
-	response.status(200);
-	response.set("Content-Type", "text/plain");
-	response.send("Front page");
-});
-
-app.get("/:id", function(request, response) {
-	var url = URL.findOne({ title: request.params.link }, handleDBError);
-	if(url && url.url) {
-		response.redirect(301, url.url);
-	} else {
-		response.status(404).end();
-	}
-});
-
-app.post("/", function(request, response) {
-	// Validate the request, it should have an URL to shorten
-	if(!request.body.url) {
-		response.status(400);
-		response.set("Content-Type", "text/plain");
-		return response.send("No URL found in your request");
-	}
-
-	response.status(200);
-	response.set("Content-Type", "text/plain");
-	// Storing a new shortened URL into the database
-	var newURL = new URL({
-		id: shortid.generate(),
-		url: request.body.url,
-	});
-	newURL.save(handleDBError);
-	response.send(request.protocol + "://" + request.headers.host + newURL.id);
-});
-
 var port = process.env.PORT || 1337;
 var server = app.listen(port, function () {
   var host = server.address().address;
@@ -54,7 +20,6 @@ var server = app.listen(port, function () {
 });
 
 
-var db = mongoose.connection;
 var dbURI = process.env.MONGOLAB_URI || "mongodb://localhost/url-database";
 mongoose.connect(dbURI, function(error, result) {
 	if(error) {
@@ -63,16 +28,53 @@ mongoose.connect(dbURI, function(error, result) {
 		console.log("Connected to " + dbURI);
 	}
 });
-
-// Defining the URL model
-var URL;
+var db = mongoose.connection;
+db.on("error", console.error.bind(console, "connection error:"));
 db.once("open", function() {
 	var urlSchema = new mongoose.Schema({
 		id: String,
-		url: String,
+		link: String,
 		createdAt: {type: Date, default: Date.now}
 	});
-	URL = mongoose.model("URL", urlSchema);
+	var URL = mongoose.model("URL", urlSchema);
+
+	app.get("/:id", function(request, response) {
+		URL.find(function (err, urls) {
+		  if (err) return console.error(err);
+		  console.log(urls)
+		});
+		console.log("Searching by id: " + request.params.id);
+		URL.findOne({id: request.params.id}, function(error, result) {
+			if(error) {
+				console.error(error);
+			}
+			if(result && result.link) {
+				response.redirect(301, result.link).end();
+			} else {
+				response.status(404).end();
+			}
+		});
+	});
+
+	app.post("/", function(request, response) {
+		// Validate the request, it should have an URL to shorten
+		if(!request.body.link) {
+			response.status(400);
+			response.set("Content-Type", "text/plain");
+			return response.send("No URL found in your request");
+		}
+
+		response.status(200);
+		response.set("Content-Type", "text/plain");
+		// Storing a new shortened URL into the database
+		var newURL = new URL({
+			id: shortid.generate(),
+			link: request.body.link,
+		});
+		newURL.save(handleDBError);
+		response.send(request.protocol + "://" + request.headers.host + "/" + 
+			newURL.id);
+	});
 });
 
 // Function for logging the errors in database operations
