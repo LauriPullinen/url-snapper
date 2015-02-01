@@ -72,8 +72,7 @@ db.once("open", function() {
 			link: request.body.link,
 		});
 		newURL.save(handleDBError);
-		response.send(request.protocol + "://" + request.headers.host + "/" + 
-			newURL.id);
+		response.send(newURL.id);
 	});
 });
 

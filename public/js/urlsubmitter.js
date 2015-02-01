@@ -6,7 +6,7 @@ $(document).ready(function() {
 			method: "POST",
 			data: formData,
 			success: function(data) {
-				$("#short-url").attr("href",data).html(data);
+				$("#short-url").attr("href","/" + data).html(data);
 				$("#short-url-container").show();
 			},
 			error: function() {
