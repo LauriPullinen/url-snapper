@@ -49,7 +49,7 @@ db.once("open", function() {
 				console.error(error);
 			}
 			if(result && result.link) {
-				response.redirect(301, result.link).end();
+				response.redirect(301, result.link);
 			} else {
 				response.status(404).end();
 			}

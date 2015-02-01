@@ -1,5 +1,6 @@
 html {
 	font-family: 'Vollkorn' serif;
+	background-color: moccasin;
 }
 
 .container {
@@ -14,11 +15,13 @@ h1, h2 {
 
 h1 {
 	font-weight: normal;
+	margin-bottom: 0;
 }
 
 h2 {
 	font-weight: bold;
 	font-style: italic;
+	margin-top: 0;
 }
 
 input {
@@ -27,15 +30,39 @@ input {
 }
 
 input[type=url] {
-	width: 80%;
+	width: 83%;
 }
 
 input[type=submit] {
-	width: 15%
+	width: 15%;
+	margin: 0;
 }
 
 #short-url-container {
 	display: none;
 	margin-top: 1em;
 	text-align: center;
+}
+
+#short-url-container > * {
+	float: left;
+}
+
+.arrow-left {
+	display: inline-block;
+	box-sizing: border-box;
+	width: 10px; 
+	height: 10px;
+	margin: 9px 0;
+	border-top: 5px solid transparent;
+	border-bottom: 5px solid transparent; 	
+	border-right: 5px solid darkgray; 
+}
+
+.speech-bubble {
+	border: 2px solid darkgray;
+	border-radius: 5px;
+	padding: 2px 6px;
+	height: 20px;
+	background-color: ivory;
 }
