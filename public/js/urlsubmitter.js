@@ -6,8 +6,10 @@ $(document).ready(function() {
 			method: "POST",
 			data: formData,
 			success: function(data) {
-				$("#short-url").attr("href","/" + data).html(data);
+				$("#short-url-container input").val(window.location.protocol + 
+					"//" + window.location.host + "/" + data);
 				$("#short-url-container").show();
+				$("#short-url-container input").select();
 			},
 			error: function() {
 			}
