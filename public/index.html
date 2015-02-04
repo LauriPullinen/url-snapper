@@ -10,22 +10,23 @@
 	</head>
 	<body>
 		<div class="container">
-			<h1>Welcome to URL Snapper</h1>
+			<h1>URL Snapper</h1>
 			<h2>The simple URL shortener</h2>
 
 			<form action="/" method="POST">
-				<label>Write or paste an URL here:
+				<label>Write or paste a URL here:
 					<input type="url" name="link" required>
 				</label>
 				<input type="submit" value="Snap it!">
 			</form>
 
-			<div id="short-url-container" title="Right-click the link and select Copy link address. You can check the link's target by clicking it!">
+			<div id="short-url-container">
 				<img src="/turtle-64.png">
 				<div class="arrow-left"></div>
-				<span class="speech-bubble">
-					Oh Snap! Here, use this: <input type="text">
-				</span>
+				<div id="speech-bubble">
+					<div id="text-container">Oh Snap! Here, use this:</div>
+					<input type="text">
+				</div>
 			</div>
 		</div>
 
